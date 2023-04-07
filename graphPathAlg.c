@@ -23,20 +23,41 @@ void printName( )
  */
 Graph* buildGraph( array2D* maze, Point2D* point /* and other parameters you find helpful */  )
 {
-    
-  double value;
- 
- graphType gT1;
- graphType gT2;
-   Graph* gr= createGraph(maze->length*maze->width);
-    setEdge(gr,gT1,gT2,value);
-    createPoint(point->x,point->y);
-    
-    
-    //OPTIONAL TODO: Translate the given maze into a graph.  'X' represents impassable locations.  Only moves of up, down, left, and right are allowed. 
+     //OPTIONAL TODO: Translate the given maze into a graph.  'X' represents impassable locations.  Only moves of up, down, left, and right are allowed. 
     /* With the right parameters this can be used by all three functions below to build the graph representing their different maze problems. */
     /* HINT 1: To solve this, my solution used the functions createGraph and setEdge from graph.c */
     /* HINT 2: My solution also used createPoint from point2D.c */
+  double value;
+  int i;
+  int j;
+graphType gT1;
+ graphType gT2;
+ int capacity;
+ Graph* gr= createGraph(maze->length*maze->width);
+ printf("gr %d \n",gr);
+
+ for (i=0;i<maze->length;i++)
+ {  
+   
+    for(j=0;j<maze->width;j++)
+    {
+        if (maze[i][j]==" "){
+            capacity+=i*j;
+              createPoint(i,j); 
+        }
+
+   
+    }
+    printf("capacity %d \n",capacity);
+ }
+ 
+     
+
+    setEdge(gr,gT1,gT2,value);
+  
+    
+    
+   
 
     return NULL; /* TODO: Replace with your graph representing maze */
 }
