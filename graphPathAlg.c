@@ -28,32 +28,65 @@ Graph* buildGraph( array2D* maze, Point2D* point /* and other parameters you fin
     /* HINT 1: To solve this, my solution used the functions createGraph and setEdge from graph.c */
     /* HINT 2: My solution also used createPoint from point2D.c */
   double value;
-  int i;
+  int numRows=maze->length;
+  int numCols=maze->width;
+    int i;
   int j;
-graphType gT1;
- graphType gT2;
- int capacity;
- Graph* gr= createGraph(maze->length*maze->width);
- printf("gr %d \n",gr);
+  
+graphType curNode;
+curNode= createPoint(i,j);
 
- for (i=0;i<maze->length;i++)
+curNode.y=0;
+  graphType nextNode;
+
+   Graph* graph= createGraph(numRows*numCols);
+
+
+
+nextNode=createPoint(i,j);
+
+
+
+// loop through cells in array maze 
+ for (i=0;i<numRows;i++)
  {  
-   
-    for(j=0;j<maze->width;j++)
+    for(j=0;j<numCols;j++)
     {
-        if (maze[i][j]==" "){
-            capacity+=i*j;
-              createPoint(i,j); 
+     
+      if(maze->array2D[i][j] !='X')
+      {
+      
+       // check left neighbor
+        if(j>0 && maze->array2D[i][j-1] !='X')
+        {
+            nextNode= createPoint(i, i*numCols +(j-1));
+            value=1;
+            setEdge(graph,curNode,nextNode,value);
+
         }
+        // check right neighbor
+        if (j > 0 && maze->array2D[i][j + 1] != 'X')
+        {
+            nextNode = createPoint(i, i * numCols + (j + 1));
+            value = 1;
+            setEdge(graph, curNode, nextNode, value);
+        }
+        // check up
+        if (j > 0 && maze->array2D[i+1][j] != 'X')
+        {
+            nextNode = createPoint(i, i * numCols + (j - 1));
+            value = 1;
+            setEdge(graph, curNode, nextNode, value);
+        }
+      }
+    }
 
    
-    }
-    printf("capacity %d \n",capacity);
  }
  
      
 
-    setEdge(gr,gT1,gT2,value);
+
   
     
     
