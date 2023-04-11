@@ -21,7 +21,7 @@ void printName( )
  * IMPORTANT NOTE: This is an entirely optional helper function which is only called by student implemented functions.
  * Creates a new graph to represent the given maze.  
  */
-Graph* buildGraph( array2D* maze, Point2D* point /* and other parameters you find helpful */  )
+Graph* buildGraph( array2D* maze, Point2D* point,Point2D start,Point2D finish /* and other parameters you find helpful */  )
 {
      //OPTIONAL TODO: Translate the given maze into a graph.  'X' represents impassable locations.  Only moves of up, down, left, and right are allowed. 
     /* With the right parameters this can be used by all three functions below to build the graph representing their different maze problems. */
@@ -32,83 +32,76 @@ Graph* buildGraph( array2D* maze, Point2D* point /* and other parameters you fin
   int numCols=maze->width;
     int i;
   int j;
-  
-graphType curNode;
-curNode= createPoint(i,j);
 
-curNode.y=0;
-  graphType nextNode;
+  Point2D start;
+  Point2D finish;
+  Point2D left;
+  Point2D right;
+  Point2D up;
+  Point2D down;
 
-   Graph* graph= createGraph(numRows*numCols);
+  Graph *g = createGraph(numRows * numCols);
 
-
-
-nextNode=createPoint(i,j);
-
-
-
-// loop through cells in array maze 
- for (i=0;i<numRows;i++)
- {  
+  // loop through cells in array maze
+  for (i = 0; i < numRows; i++)
+  {  
     for(j=0;j<numCols;j++)
     {
-     
-      if(maze->array2D[i][j] !='X')
-      {
-      
-       // check left neighbor
-        if(j>0 && maze->array2D[i][j-1] !='X')
-        {
-            nextNode= createPoint(i, i*numCols +(j-1));
-            value=1;
-            setEdge(graph,curNode,nextNode,value);
-
-        }
-        // check right neighbor
-        if (j > 0 && maze->array2D[i][j + 1] != 'X')
-        {
-            nextNode = createPoint(i, i * numCols + (j + 1));
-            value = 1;
-            setEdge(graph, curNode, nextNode, value);
-        }
-        // check up
-        if (j > 0 && maze->array2D[i+1][j] != 'X')
-        {
-            nextNode = createPoint(i, i * numCols + (j - 1));
-            value = 1;
-            setEdge(graph, curNode, nextNode, value);
-        }
-      }
+   
+      if (maze->array2D[i][j]=='S')
+      start = createPoint(i, j);
     }
+    if (maze->array2D[i][j] == 'S')
+    {
+     finish = createPoint(i, j);
+    }
+       if (maze->array2D !='X')
+       {
+        left=createPoint(i+1,j);
+        right=createPoint(i-1,j);
+        up=createPoint(i,j+1);
+        down=createPoint(i,j-1);
 
-   
+        setEdge(g,start,left,1);
+        setEdge(g, start, right, 1);
+        setEdge(g, start, down, 1);
+        setEdge(g, start, up, 1);
+        setEdge(g,start,finish,1);
+       }
  }
- 
-     
 
-
-  
-    
-    
    
-
-    return NULL; /* TODO: Replace with your graph representing maze */
+return buildGraph(maze,point*,start,finish);
+    /* TODO: Replace with your graph representing maze */
 }
-
 /* hasPath
  * input: an array2D pointer to a maze
  * output: pathResult
  *
  * Detects whether a path exists from 'S' to 'F' in the graph. 'X' marks impassable regions.
  */
-pathResult hasPath( array2D *maze )
+pathResult hasPath(array2D *maze )
 {
+  buildGraph(maze, point);
+  int getDist;
+  int path;
+dijkstrasAlg(g,start );
+getDist=getDistance(g,start,finish);
+
+if (getDist==INT_MAX){
+ path=PATH_IMPOSSIBLE;
+}
+else{
+  path=PATH_FOUND;
+}
+printf("%d\n ",path);
     //TODO: Complete this function
     /* HINT 1: To solve this, my solution used the functions createGraph, freeGraph, setEdge, dijkstrasAlg, getDistance from graph.c */
     /* HINT 2: My solution also used createPoint from point2D.c */
     /* HINT 3: You might also consider using the new helper function buildGraph to build the graph representing maze. */
+    
 
-    return PATH_UNKNOWN; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
+    return path; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
 }
 
 /* findNearestFinish
