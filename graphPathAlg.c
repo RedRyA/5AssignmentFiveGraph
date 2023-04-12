@@ -63,38 +63,45 @@ pathResult hasPath(array2D *maze )
     {
 
       if (maze->array2D[i][j] == 'S')
+      {
         start = createPoint(i, j);
-    }
-    if (maze->array2D[i][j] == 'S')
+      }
+        
+    if (maze->array2D[i][j] == 'F')
     {
       finish = createPoint(i, j);
+      setEdge(g,start,finish,500);
     }
-    if (maze->array2D != 'X')
+    if (maze->array2D[i][j] != 'X' )
     {
       left = createPoint(i + 1, j);
       right = createPoint(i - 1, j);
-      up = createPoint(i, j + 1);
+      up = createPoint(i , j + 1);
       down = createPoint(i, j - 1);
 
       setEdge(g, start, left, 1);
       setEdge(g, start, right, 1);
       setEdge(g, start, down, 1);
-      setEdge(g, start, up, 1);
-      setEdge(g,start,finish,1);
+     setEdge(g,start,up,1);
       
     }
-  }
+}
+}
+  
 
  dijkstrasAlg(g,start);
 
- 
   dist=getDistance(g,start,finish);
   printf("%d \n",dist);
 if (dist==INT_MAX){
 path=PATH_IMPOSSIBLE;
 }
-else{
+else if(dist<INT_MAX){
   path=PATH_FOUND;
+}
+else
+{
+  path=PATH_UNKNOWN;
 }
 freeGraph(g);
     //TODO: Complete this function
@@ -145,13 +152,17 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
       {
 
         if (maze->array2D[i][j] == 'S')
+        {
           start = createPoint(i, j);
-      }
-      if (maze->array2D[i][j] == 'S')
+        }
+          
+      
+      if (maze->array2D[i][j] == 'F')
       {
         finish = createPoint(i, j);
+        setEdge(g, start, finish, 1);
       }
-      if (maze->array2D != 'X')
+      if (maze->array2D[i][j] != 'X')
       {
         left = createPoint(i + 1, j);
         right = createPoint(i - 1, j);
@@ -165,20 +176,23 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
       
       }
     }
+    }
     dijkstrasAlg(g, start);
     dist = getDistance(g, start, finish);
-    if (dist == INT_MAX)
+    if (dist >= INT_MAX)
     {
-     (*spDist) = INT_MAX;
+    // (*spDist) = INT_MAX;
+    path=PATH_IMPOSSIBLE;
     }
     else
     {
-      (*spDist) =dist;
+    //  (*spDist) =dist;
+    path=PATH_FOUND;
     }
 freeGraph(g);
    // ; /* TODO: This returns your shortest path distance to any 'F' from the 'S'.  Set it to INT_MAX if no path exists. */
     
-    return dist; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
+    return path; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
 }
 
 /* findTunnelRoute
@@ -217,13 +231,17 @@ pathResult findTunnelRoute( array2D *maze, int k )
       {
 
         if (maze->array2D[i][j] == 'S')
-          start = createPoint(i, j);
-      }
-      if (maze->array2D[i][j] == 'S')
+        {
+           start = createPoint(i, j);
+        }
+         
+      
+      if (maze->array2D[i][j] == 'F')
       {
         finish = createPoint(i, j);
+        setEdge(g,start,finish,1);
       }
-      if (maze->array2D != 'X')
+      if (maze->array2D[i][j] != 'X')
       {
         left = createPoint(i + 1, j);
         right = createPoint(i - 1, j);
@@ -236,6 +254,7 @@ pathResult findTunnelRoute( array2D *maze, int k )
         setEdge(g, start, up, 1);
    
       }
+    }
     }
     dijkstrasAlg(g, start);
     dist = getDistance(g, start, finish);
