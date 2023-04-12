@@ -80,11 +80,16 @@ pathResult hasPath(array2D *maze )
       setEdge(g, start, right, 1);
       setEdge(g, start, down, 1);
       setEdge(g, start, up, 1);
-      setEdge(g, start, finish, 1);
+      setEdge(g,start,finish,1);
+      
     }
   }
+
  dijkstrasAlg(g,start);
-dist=getDistance(g,start,finish);
+
+ 
+  dist=getDistance(g,start,finish);
+  printf("%d \n",dist);
 if (dist==INT_MAX){
 path=PATH_IMPOSSIBLE;
 }
@@ -157,7 +162,7 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
         setEdge(g, start, right, 1);
         setEdge(g, start, down, 1);
         setEdge(g, start, up, 1);
-        setEdge(g, start, finish, 1);
+      
       }
     }
     dijkstrasAlg(g, start);
@@ -229,7 +234,7 @@ pathResult findTunnelRoute( array2D *maze, int k )
         setEdge(g, start, right, 1);
         setEdge(g, start, down, 1);
         setEdge(g, start, up, 1);
-        setEdge(g, start, finish, 1);
+   
       }
     }
     dijkstrasAlg(g, start);
