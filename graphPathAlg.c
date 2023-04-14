@@ -134,8 +134,11 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
       int numRows = maze->length;
       int numCols = maze->width;
       int i, j;
+      int k=0;
       double dist;
-      double realDist=0;
+      double dist2;
+    
+  
       double weight = 1.0;
       Graph *g = createGraph(numRows * numCols);
 
@@ -156,11 +159,14 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
           if (maze->array2D[i][j] == 'S')
           {
             start = createPoint(i, j);
+           
           }
 
           if (maze->array2D[i][j] == 'F')
           {
+          
             finish = createPoint(i, j);
+            
           }
 
           if (maze->array2D[i][j] != 'X')
@@ -177,53 +183,66 @@ pathResult findNearestFinish( array2D *maze, int *spDist )
             setEdge(g, cell, down, weight);
           }
         }
-      }      
+      }
 
       dijkstrasAlg(g, start);
   
-
-      // loop through 'F' points to find shortest distance
+      // iterate through array and find f's
+     
       for (i = 0; i < numRows; i++)
       {
         for (j = 0; j < numCols; j++)
         {
           if (maze->array2D[i][j] == 'F')
           {
-            finish = createPoint(i, j);
-           dist = getDistance(g, start, finish);
-           if(dist <realDist)
-           {
-          
-           }else
-           {
-            realDist=dist;
            
-           }
-           printf("dist %d \n",dist);
+            finish = createPoint(i, j);
+            dist=getDistance(g,start,finish);
+            printf("dissst %lf \n",dist);
+            if (k==0)
+            {
+              dist2=dist;
+            
+            }
+            else if(k>0)
+            {
+              if(dist<dist2)
+              dist2=dist;
+
+        
+            }
+           k++;
           }
         }
+      
       }
+
+          // loop through 'F' points to find shortest distance
+
+          
 
       freeGraph(g);
 
-      if (dist == INT_MAX)
-      {
-        *spDist = INT_MAX;
-        return PATH_IMPOSSIBLE;
+        printf("dist %lf \n", dist2);
+        if (dist2 == INT_MAX)
+        {
+          *spDist = INT_MAX;
+          return PATH_IMPOSSIBLE;
+           }
+           else
+           {
+             *spDist = (int)dist2;
+             return PATH_FOUND;
+           }
       }
-      else
-      {
-        *spDist = (int)dist;
-        return PATH_FOUND;
-      }
-}
 
-// TODO: Complete this function
-/* HINT 1: To solve this, my solution used the functions createGraph, freeGraph, setEdge, dijkstrasAlg, getDistance from graph.c */
-/* HINT 2: My solution also used createPoint from point2D.c */
-/* HINT 3: You might also consider using the new helper function buildGraph to build the graph representing maze. */
-; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
+        
 
+        // TODO: Complete this function
+        /* HINT 1: To solve this, my solution used the functions createGraph, freeGraph, setEdge, dijkstrasAlg, getDistance from graph.c */
+        /* HINT 2: My solution also used createPoint from point2D.c */
+        /* HINT 3: You might also consider using the new helper function buildGraph to build the graph representing maze. */
+         /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
 
 /* findTunnelRoute
  * input: an array2D pointer to a maze, an int representing the number X's you can travel through
@@ -237,22 +256,20 @@ pathResult findTunnelRoute( array2D *maze, int k )
     /* HINT 1: To solve this, my solution used the functions createGraph, freeGraph, setEdge, dijkstrasAlg, getDistance from graph.c */
     /* HINT 2: My solution also used createPoint from point2D.c */
     /* HINT 3: You might also consider using the new helper function buildGraph to build the graph representing maze. */
-    double value;
     int numRows = maze->length;
     int numCols = maze->width;
-    int i;
-    int j;
+    int i, j;
     double dist;
-    int path;
+    double weight = 1.0;
+    Graph *g = createGraph(numRows * numCols);
 
     Point2D start;
     Point2D finish;
+    Point2D cell;
     Point2D left;
     Point2D right;
     Point2D up;
     Point2D down;
-
-    Graph *g = createGraph(numRows * numCols);
 
     // loop through cells in array maze
     for (i = 0; i < numRows; i++)
@@ -262,40 +279,74 @@ pathResult findTunnelRoute( array2D *maze, int k )
 
         if (maze->array2D[i][j] == 'S')
         {
-           start = createPoint(i, j);
+          start = createPoint(i, j);
         }
-         
-      
-      if (maze->array2D[i][j] == 'F')
-      {
-        finish = createPoint(i, j);
-        setEdge(g,start,finish,1);
-      }
-      if (maze->array2D[i][j] != 'X')
-      {
-        left = createPoint(i + 1, j);
-        right = createPoint(i - 1, j);
-        up = createPoint(i, j + 1);
-        down = createPoint(i, j - 1);
 
-        setEdge(g, start, left, 1);
-        setEdge(g, start, right, 1);
-        setEdge(g, start, down, 1);
-        setEdge(g, start, up, 1);
-   
-      }
-    }
-    }
+        if (maze->array2D[i][j] == 'F')
+        {
+          finish = createPoint(i, j);
+        }
+
+        if (maze->array2D[i][j] != 'X')
+        {
+          cell = createPoint(i, j);
+          left = createPoint(i, j - 1);
+          right = createPoint(i, j + 1);
+          up = createPoint(i - 1, j);
+          down = createPoint(i + 1, j);
+
+          setEdge(g, cell, left, weight);
+          setEdge(g, cell, right, weight);
+          setEdge(g, cell, up, weight);
+          setEdge(g, cell, down, weight);
+        }
+        while (k>0){
+
+        
+
+            cell = createPoint(i, j);
+          
+          if (maze->array2D[i][j-1]=='X')
+          {
+             left = createPoint(i, j );
+             setEdge(g, cell, left, weight);
+             k++;
+          }
+          if (maze->array2D[i][j +1]=='X')
+          {
+          right = createPoint(i, j );
+          setEdge(g, cell, right, weight);
+          k++;
+          }
+          if (maze->array2D[i-1][j] =='X')
+          {
+            up = createPoint(i , j);
+            setEdge(g, cell, up, weight);
+            k++;
+          }
+          if (maze->array2D[i+1][j] =='X')
+          {
+           down = createPoint(i, j);
+           setEdge(g, cell, down, weight);
+           k++;
+          }
+            }
+    }}
+
+    printf(" S to F %lf \n", getEdge(g, start, finish));
     dijkstrasAlg(g, start);
+
     dist = getDistance(g, start, finish);
+
+    freeGraph(g);
+
     if (dist == INT_MAX)
     {
-      path = PATH_IMPOSSIBLE;
+      return PATH_IMPOSSIBLE;
     }
     else
     {
-      path = PATH_FOUND;
+      return PATH_FOUND;
     }
-freeGraph(g);
-    return path; /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
+     /* TODO: Replace with PATH_FOUND or PATH_IMPOSSIBLE based on whether a path exists */
 }
